@@ -1,0 +1,49 @@
+<div class="container card">
+    <h1>ACME Cart</h1>
+    <div *ngIf="cartItems.length === 0; else elseBlock" class="alert alert-info">Your Cart is Empty.</div>
+
+    <ng-template #elseBlock>
+        <form [formGroup]="userForm" (ngSubmit)="onBuy()">
+            <ul class="list-group-flush">
+                <li formArrayName="cartForm" class="list-group-item"
+                    *ngFor="let item of userForm.get('cartForm')['controls']; let i = index">
+                    <div class="row" [formGroupName]="i">
+                        <div class="col-md-4">
+                            <img class="bd-placeholder-img card-img-top p-2 img-size" width="100%"
+                                [src]="'assets/images/'+item.value.image+'.jpg'" />
+                        </div>
+                        <div class="col-md-2">
+                            {{ item.value.title }}
+                        </div>
+                        <input type="hidden" value="item.productId">
+                        <div class="col-md-3">
+                            <input formControlName="quantity" type="number" class="form-control"
+                                [ngClass]="{'is-invalid' : item.get('quantity').invalid}" />
+                            <div *ngIf="item.get('quantity').invalid" class="invalid-feedback">
+                                Quantity is required or not correct
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <strong>{{ (item.quantity * item.price) | currency:'CAD' }}</strong>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <hr>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <input formControlName="email" type="text" id="email" class="form-control" placeholder="Enter email"
+                        [ngClass]="{'is-invalid' : userForm.get('email').errors && (userForm.get('email').touched || userForm.get('email').dirty)}">
+                    <div *ngIf="userForm.get('email').errors" class="invalid-feedback">
+                        <div *ngIf="userForm.get('email').errors.required">Email is required</div>
+                        <div *ngIf="userForm.get('email').errors.min">Min 1</div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <button type="submit" class="btn btn-primary float-right" [disabled]="this.userForm.invalid">Buy
+                        Now!</button>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+</div>

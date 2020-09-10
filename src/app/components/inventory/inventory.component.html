@@ -1,0 +1,58 @@
+<div class="container">
+    <h1>ACME Inventory</h1>
+    <div class="row">
+        <div class="col-md-4" *ngFor="let p of products; index as i">
+            <div class="card mb-4 shadow-sm">
+                <img class="bd-placeholder-img card-img-top p-2 img-size" width="100%"
+                    [src]="'assets/images/'+p.image+'.jpg'" />
+                <div class="card-body">
+                    <h5 class="card-title">{{p.title}}</h5>
+                    <p>{{p.quantity}}</p>
+                    <div class="float-right">
+                        <p *ngIf="p.quantity!=0; else unavailable_content">
+                            {{ p.price | currency:'CAD' }}
+                        </p>
+                        <ng-template #unavailable_content>
+                            <p>Unavailable</p>
+                        </ng-template>
+                        <button type="button" class="btn btn-sm btn-primary" (click)="getProduct(p.id)"
+                            data-toggle="modal" data-target="#exampleModal" [disabled]="p.quantity==0">Add to
+                            Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" *ngIf="product">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img class="bd-placeholder-img card-img-top p-2 img-size" width="100%"
+                            [src]="'assets/images/'+product.image+'.jpg'" />
+                    </div>
+                    <div class="col-md-6">
+                        <h5> {{ product.title }}</h5>
+                        <p>{{ product.description }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="addToCart(product)" data-dismiss="modal">Add
+                    to
+                    Cart</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
